@@ -59,7 +59,7 @@ END_FILE
 Generate the clear and understandable Markdown documentation based on the following source code:
 """
 
-prompt += get_local('')
+prompt += get_local('.')
 
 genai.configure(api_key=keys.API_KEY)
 

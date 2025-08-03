@@ -1,6 +1,7 @@
 import os
 import sys
 import subprocess
+import getpass
 
 home = os.path.expanduser("~")
 os.chdir(home)
@@ -38,5 +39,10 @@ for rc in os.listdir(home):
             print(f"Added PATH export to {rc_path}")
         else:
             print(f"PATH export already present in {rc_path}")
+
+gemini_key = getpass.getpass('Enter your google gemini API key: ')
+
+with open(os.path.join(spark_dir, 'keys.py'), 'w') as f:
+    f.write(f'API_KEY: str = "{gemini_key}"')
 
 print("Installation complete. Restart your shell or run 'source ~/.bashrc' (or equivalent) to update PATH.")
