@@ -11,7 +11,8 @@ if not os.path.exists(spark_dir):
     print("Cloning spark repository...")
     subprocess.run(["git", "clone", "https://github.com/kleo-dev/spark.git", ".spark"], check=True)
 else:
-    print(".spark directory exists, skipping clone.")
+    print(".spark directory exists, updating.")
+    subprocess.run(["git", "-C", spark_dir, "pull"], check=True)
 
 bin_dir = os.path.join(spark_dir, "bin")
 os.makedirs(bin_dir, exist_ok=True)
