@@ -8,6 +8,10 @@ if os.path.exists('.sparkignore'):
     with open('.sparkignore', 'r') as f:
         ignore = f.readlines()
 
+elif os.path.exists('.gitignore'):
+    with open('.gitignore', 'r') as f:
+        ignore = f.readlines()
+
 def file_prompt(path: str, contents: str):
     return f"File: {path}\nContents: ```\n{contents}\n```\n"
 
