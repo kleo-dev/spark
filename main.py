@@ -81,11 +81,11 @@ Generate high-quality, modular Markdown documentation files based on the followi
 
 prompt += get_local('.')
 
-genai.configure(api_key=keys.API_KEY)
+print('generating.. please wait')
 
+genai.configure(api_key=keys.API_KEY)
 model = genai.GenerativeModel('gemini-2.5-flash')
 response = model.generate_content(prompt)
-print('generating.. please wait')
 print(response.text)
 print('---------------')
 
