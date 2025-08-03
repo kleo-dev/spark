@@ -4,15 +4,15 @@ import shutil
 import google.generativeai as genai
 import re
 
-ignore = []
+ignore = [".git", ".gitignore", "keys.py", "LICENSE"]
 
 if os.path.exists('.sparkignore'):
     with open('.sparkignore', 'r') as f:
-        ignore = f.readlines()
+        ignore += [line.strip() for line in f]
 
 elif os.path.exists('.gitignore'):
     with open('.gitignore', 'r') as f:
-        ignore = f.readlines()
+        ignore += [line.strip() for line in f]
 
 def file_prompt(path: str, contents: str):
     return f"File: {path}\nContents: ```\n{contents}\n```\n"
@@ -23,9 +23,11 @@ def get_local(path: str) -> str:
 
     for sub in subs:
         rel = os.path.join(path, sub)
+        if rel.removeprefix('./') in ignore: continue
         if os.path.isdir(rel):
-            get_local(rel)
+            prompt += get_local(rel)
         else:
+            print(f'Reading {rel}')
             with open(rel, 'r') as f:
                 prompt += file_prompt(rel, f.read())
 
@@ -43,11 +45,12 @@ def parse_output(input: str) -> list[tuple[str, str]]:
 
     return output
 
-prompt = """title: <Title of the Document>
-slug: <url-slug>
-<Markdown content of the document> ``` END_FILE
-
+prompt = """
 Guidelines:
+    Write each different markdown file with the following format:
+        File: <file-path>
+        Contents: ```<contents>```
+        END_FILE
 
     Organize the documentation into logical categories such as:
 
@@ -82,14 +85,17 @@ genai.configure(api_key=keys.API_KEY)
 
 model = genai.GenerativeModel('gemini-2.5-flash')
 response = model.generate_content(prompt)
+print('generating.. please wait')
 print(response.text)
 print('---------------')
 
+if os.path.exists('docs_output'):
+    shutil.rmtree('docs_output')
+
 for file in parse_output(response.text):
     file_path = os.path.join('docs_output', file[0])
-    if os.path.exists('docs_output'):
-        shutil.rmtree('docs_output')
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     
+    print(f'Writing {file[0]}')
     with open(file_path, 'w') as f:
         f.write(file[1])
