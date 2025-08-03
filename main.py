@@ -86,7 +86,8 @@ print('generating.. please wait')
 genai.configure(api_key=keys.API_KEY)
 model = genai.GenerativeModel('gemini-2.5-flash')
 response = model.generate_content(prompt)
-print(response.text)
+with open('spark_response.md', 'w') as f:
+    f.write(response.text)
 print('---------------')
 
 if os.path.exists('docs_output'):
