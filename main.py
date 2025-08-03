@@ -43,20 +43,37 @@ def parse_output(input: str) -> list[tuple[str, str]]:
 
     return output
 
-prompt = """You are a senior software engineer tasked with documenting a project.
-Your output must be structured as follows for each generated documentation file:
+prompt = """title: <Title of the Document>
+slug: <url-slug>
+<Markdown content of the document> ``` END_FILE
 
-File: <path/to/documentation/file.md>
-Contents: ```
----
-title: <Doc title>
-slug: <doc/slug>
----
-<Markdown content for the documentation file>
-```
-END_FILE
+Guidelines:
 
-Generate the clear and understandable Markdown documentation based on the following source code:
+    Organize the documentation into logical categories such as:
+
+        intro/ - Overview, installation, getting started
+
+        guides/ - How-to guides, usage patterns, real-world examples
+
+        reference/ - API reference, detailed module/function/class docs
+
+        concepts/ - Explanations of core ideas, architecture, and design decisions
+
+        advanced/ - Performance, customization, contributing, and internals
+
+    Write for a developer audience. Use precise, professional language and explain why things work the way they do—not just how.
+
+    Be helpful, not verbose. Use clear headers, short paragraphs, bullet points, and examples.
+
+    Where relevant, include:
+
+        Code samples and explanations
+
+        Links to related documents
+
+        Realistic usage scenarios
+
+Generate high-quality, modular Markdown documentation files based on the following source code:
 """
 
 prompt += get_local('.')
